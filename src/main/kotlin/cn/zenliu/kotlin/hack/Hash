@@ -1,0 +1,70 @@
+/**
+ * @Author: Zen.Liu
+ * @Date: 2018-12-21 9:44
+ * @Project: boot
+ */
+@file:Suppress("NOTHING_TO_INLINE")
+
+package ccn.zenliu.kotlin.hack
+
+import java.security.MessageDigest
+import java.security.Signature
+import java.util.*
+
+/**
+ * convert byte to HEX string
+ */
+val Byte.toHex inline get() = String.format("%02X", this)
+/**
+ * convert byte array to HEX string
+ */
+val ByteArray.toHex inline get() = this.joinToString("") { it.toHex }
+//<editor-fold desc="MD5">
+/**
+ * calc md5
+ */
+val String.md5: String
+    inline get() = MessageDigest.getInstance("MD5").digest(this.toByteArray()).toHex
+
+/**
+ * calc md5 hash of String with salt
+ * @receiver String
+ * @param salt String
+ * @return String
+ */
+infix fun String.md5Salt(salt: String) = (this + salt).md5
+
+/**
+ * calc md5
+ */
+val ByteArray.md5: String
+    inline get() = MessageDigest.getInstance("MD5").digest(this).toHex
+/**
+ * MD5 with salt
+ * Pair<Source:String,Salt:String>
+ */
+val Pair<String, String>.md5Salt: String
+    inline get() = MessageDigest.getInstance("MD5").digest((this.first + this.second).toByteArray()).toHex
+//</editor-fold>
+
+//<editor-fold desc="SHA">
+val String.sha256: String inline get() = MessageDigest.getInstance("SHA-256").digest(this.toByteArray()).toHex
+val ByteArray.sha256: String inline get() = MessageDigest.getInstance("SHA-256").digest(this).toHex
+
+val String.sha1: String inline get() = MessageDigest.getInstance("SHA-1").digest(this.toByteArray()).toHex
+val ByteArray.sha1: String inline get() = MessageDigest.getInstance("SHA-1").digest(this).toHex
+
+val String.sha384: String inline get() = MessageDigest.getInstance("SHA-384").digest(this.toByteArray()).toHex
+val ByteArray.sha384: String inline get() = MessageDigest.getInstance("SHA-384").digest(this).toHex
+
+val String.sha512: String inline get() = MessageDigest.getInstance("SHA-512").digest(this.toByteArray()).toHex
+val ByteArray.sha512: String inline get() = MessageDigest.getInstance("SHA-512").digest(this).toHex
+//</editor-fold>
+
+//<editor-fold desc="Base64">
+val ByteArray.base64Encode: String
+    inline get() = Base64.getEncoder().encodeToString(this)
+
+val String.base64Decode: ByteArray inline get() = Base64.getDecoder().decode(this)
+//</editor-fold>
+
